@@ -1,0 +1,6 @@
+.venv
+.idea
+/cat_facts.db
+/htmlcov/
+/.coverage
+solar_libre_api.iml
