@@ -1,5 +1,7 @@
 from sqlmodel import SQLModel, Field
+from fastapi import APIRouter
 import id_factory
+from db import SessionDep
 
 
 class PanelBase(SQLModel):
@@ -78,3 +80,28 @@ class PanelUpdate(PanelBase):
     width: int | None = None
     reference: str | None = None
     description: str | None = None
+
+
+router = APIRouter(
+    prefix="/panels",
+    responses={404: {"description": "Solar panel Not found"}},
+)
+
+
+@router.post('/', response_model=PanelPublic)
+def create_panel(panel: PanelCreate, session: SessionDep) -> Panel:
+    """
+    Create a new solar panel.
+
+    Args:
+        panel (PanelCreate): Solar panel data.
+        session (SessionDep): Database session.
+
+    Returns:
+        Panel: Solar panel data.
+    """
+    db_panel = Panel.model_validate(panel)
+    session.add(db_panel)
+    session.commit()
+    session.refresh(db_panel)
+    return db_panel
