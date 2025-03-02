@@ -12,10 +12,10 @@ class PanelBase(SQLModel):
         impp (float): Current at maximum power point.
         voc (float): Open circuit voltage.
         isc (float): Short circuit current.
-        length (int): Length of the panel.
-        width (int): Width of the panel.
-        numide (int): Identification number of the panel.
-        description (str): Description of the panel.
+        length (int): Length of the panel (mm).
+        width (int): Width of the panel (mm).
+        reference (str | None): Optional reference of the panel, indexed and unique.
+        description (str | None): Description of the panel.
     """
     model: str = Field(index=True, unique=True)
     nominal_power: int
@@ -25,5 +25,5 @@ class PanelBase(SQLModel):
     isc: float
     length: int
     width: int
-    numide: int
-    description: str
+    reference: str | None = Field(default=None, index=True, unique=True)
+    description: str | None
