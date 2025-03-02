@@ -1,5 +1,5 @@
-from sqlmodel import SQLModel, Field
-from fastapi import APIRouter
+from sqlmodel import SQLModel, Field, select
+from fastapi import APIRouter, HTTPException
 import id_factory
 from db import SessionDep
 
@@ -84,7 +84,7 @@ class PanelUpdate(PanelBase):
 
 router = APIRouter(
     prefix="/panels",
-    responses={404: {"description": "Solar panel Not found"}},
+    responses={404: {"description": "No solar panel was found with the given ID."}},
 )
 
 
@@ -105,3 +105,39 @@ def create_panel(panel: PanelCreate, session: SessionDep) -> Panel:
     session.commit()
     session.refresh(db_panel)
     return db_panel
+
+
+@router.get('/', response_model=list[PanelPublic])
+def read_panels(session: SessionDep):
+    """
+    Retrieve all solar panels.
+
+    Args:
+        session (SessionDep): Database session.
+
+    Returns:
+        list[PanelPublic]: List of all solar panels.
+    """
+    panels = session.exec(select(Panel)).all()
+    return panels
+
+
+@router.get('/{panel_id}', response_model=PanelPublic)
+def read_panel(panel_id: str, session: SessionDep):
+    """
+    Retrieve a solar panel by its ID.
+
+    Args:
+        panel_id (str): The ID of the solar panel to retrieve.
+        session (SessionDep): Database session.
+
+    Returns:
+        PanelPublic: The solar panel data.
+
+    Raises:
+        HTTPException: If the solar panel with the given ID is not found.
+    """
+    panel = session.get(Panel, panel_id)
+    if not panel:
+        raise HTTPException(status_code=404, detail='Solar panel not found')
+    return panel
