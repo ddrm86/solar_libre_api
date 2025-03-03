@@ -1,3 +1,20 @@
+"""
+This module defines the classes and routes related to solar panels.
+
+Classes:
+    PanelBase: Base class to represent a solar panel.
+    Panel: Class to represent the table model of a solar panel.
+    PanelPublic: Class to represent the data model of a solar panel returned in queries.
+    PanelCreate: Class to represent the data model of a solar panel to be created.
+    PanelUpdate: Class to represent the data model of a solar panel to be updated.
+
+Routes:
+    create_panel: Creates a new solar panel.
+    read_panels: Retrieves all solar panels.
+    read_panel: Retrieves a solar panel by its ID.
+    update_panel: Updates a solar panel.
+    delete_panel: Deletes a solar panel.
+"""
 from sqlmodel import SQLModel, Field, select
 from fastapi import APIRouter, HTTPException
 import id_factory
