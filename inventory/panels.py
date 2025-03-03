@@ -37,7 +37,7 @@ class PanelBase(SQLModel):
         reference (str | None): Optional reference of the panel
         description (str | None): Description of the panel.
     """
-    model: str = Field(index=True, unique=True)
+    model: str = Field(index=True, unique=True, min_length=1)
     nominal_power: int
     vmpp: float
     impp: float
