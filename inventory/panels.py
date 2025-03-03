@@ -169,3 +169,26 @@ def update_panel(panel_id: str, panel: PanelUpdate, session: SessionDep):
     session.commit()
     session.refresh(db_panel)
     return db_panel
+
+
+@router.delete('/{panel_id}')
+def delete_panel(panel_id: str, session: SessionDep):
+    """
+    Delete a solar panel.
+
+    Args:
+        panel_id (str): The ID of the solar panel to delete.
+        session (SessionDep): Database session.
+
+    Returns:
+        dict: Confirmation of deletion.
+
+    Raises:
+        HTTPException: If the solar panel with the given ID is not found.
+    """
+    panel = session.get(Panel, panel_id)
+    if not panel:
+        raise HTTPException(status_code=404, detail=PANEL_NOT_FOUND_MSG)
+    session.delete(panel)
+    session.commit()
+    return {'id': panel_id, 'deleted': True}
