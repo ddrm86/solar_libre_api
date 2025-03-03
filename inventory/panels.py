@@ -81,6 +81,7 @@ class PanelUpdate(PanelBase):
     reference: str | None = None
     description: str | None = None
 
+PANEL_NOT_FOUND_MSG: str = 'Solar panel not found'
 
 router = APIRouter(
     prefix="/panels",
@@ -139,5 +140,32 @@ def read_panel(panel_id: str, session: SessionDep):
     """
     panel = session.get(Panel, panel_id)
     if not panel:
-        raise HTTPException(status_code=404, detail='Solar panel not found')
+        raise HTTPException(status_code=404, detail=PANEL_NOT_FOUND_MSG)
     return panel
+
+
+@router.patch('/{panel_id}', response_model=PanelPublic)
+def update_panel(panel_id: str, panel: PanelUpdate, session: SessionDep):
+    """
+    Update a solar panel.
+
+    Args:
+        panel_id (str): The ID of the solar panel to update.
+        panel (PanelUpdate): The updated solar panel data.
+        session (SessionDep): Database session.
+
+    Returns:
+        PanelPublic: The updated solar panel data.
+
+    Raises:
+        HTTPException: If the solar panel with the given ID is not found.
+    """
+    db_panel = session.get(Panel, panel_id)
+    if not db_panel:
+        raise HTTPException(status_code=404, detail=PANEL_NOT_FOUND_MSG)
+    panel_data = panel.model_dump(exclude_unset=True)
+    db_panel.sqlmodel_update(panel_data)
+    session.add(db_panel)
+    session.commit()
+    session.refresh(db_panel)
+    return db_panel
