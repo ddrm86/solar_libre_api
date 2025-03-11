@@ -3,9 +3,11 @@ This module initializes and configures the FastAPI application for the SolarLibr
 
 It sets up the database, includes the necessary routers, and defines the root endpoint.
 """
+import logging
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
 from inventory import panels
 import db
 
@@ -35,6 +37,18 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """
+    Exception handler for validation errors.
+
+    Args:
+        request (Request): The request that raised the exception.
+        exc (RequestValidationError): The exception raised.
+    """
+    logging.warning('Validation error: %s - %s', request, exc)
+
 
 @app.get("/")
 async def root():
