@@ -13,7 +13,7 @@ Routes:
     read_panels: Retrieves all solar panels.
     read_panel: Retrieves a solar panel by its ID.
     update_panel: Updates a solar panel.
-    delete_panel: Deletes a solar panel.
+    delete_panel: Deletes a solar panel (soft).
 """
 from sqlmodel import SQLModel, Field, select
 from fastapi import APIRouter, HTTPException
@@ -36,6 +36,7 @@ class PanelBase(SQLModel):
         width (int): Width of the panel (mm).
         reference (str | None): Optional reference of the panel
         description (str | None): Description of the panel.
+        deleted (bool): Flag to mark the panel as deleted
     """
     model: str = Field(index=True, unique=True, min_length=1)
     nominal_power: int
@@ -47,6 +48,7 @@ class PanelBase(SQLModel):
     width: int
     reference: str | None = Field(default=None, index=True, unique=True)
     description: str | None = Field(default=None)
+    deleted: bool = Field(default=False)
 
 class Panel(PanelBase, table=True):
     """
@@ -191,7 +193,7 @@ def update_panel(panel_id: str, panel: PanelUpdate, session: SessionDep):
 @router.delete('/{panel_id}')
 def delete_panel(panel_id: str, session: SessionDep):
     """
-    Delete a solar panel.
+    Flags a solar panel as deleted.
 
     Args:
         panel_id (str): The ID of the solar panel to delete.
@@ -206,6 +208,8 @@ def delete_panel(panel_id: str, session: SessionDep):
     panel = session.get(Panel, panel_id)
     if not panel:
         raise HTTPException(status_code=404, detail=PANEL_NOT_FOUND_MSG)
-    session.delete(panel)
+    panel.deleted = True
+    session.add(panel)
     session.commit()
+    session.refresh(panel)
     return {'id': panel_id, 'deleted': True}
