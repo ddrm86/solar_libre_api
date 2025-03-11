@@ -46,7 +46,7 @@ class PanelBase(SQLModel):
     length: int
     width: int
     reference: str | None = Field(default=None, index=True, unique=True)
-    description: str | None
+    description: str | None = Field(default=None)
 
 class Panel(PanelBase, table=True):
     """
