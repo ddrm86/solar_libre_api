@@ -4,12 +4,17 @@ This module initializes and configures the FastAPI application for the SolarLibr
 It sets up the database, includes the necessary routers, and defines the root endpoint.
 """
 import logging
+import os
 from contextlib import asynccontextmanager
+
+import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
+
 from inventory import panels
 import db
+
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
@@ -28,7 +33,7 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(panels.router)
 
 origins = [
-    "http://localhost:5173",
+    "http://localhost:8080",
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -59,3 +64,7 @@ async def root():
         dict: A welcome message with a link to the API documentation.
     """
     return {"message": "Welcome to SolarLibre API. Visit /docs for documentation."}
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host='0.0.0.0', port=int(os.environ.get('PORT', 8000)))
