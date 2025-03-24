@@ -5,6 +5,7 @@ It sets up the database, includes the necessary routers, and defines the root en
 """
 import logging
 import os
+import json
 from contextlib import asynccontextmanager
 
 import uvicorn
@@ -32,9 +33,8 @@ async def lifespan(_: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app.include_router(panels.router)
 
-origins = [
-    "http://localhost:8080",
-]
+DEFAULT_CORS_ORIGINS = '["http://localhost:8080", "http://localhost:5173"]'
+origins = json.loads(os.environ.get('SOLAR_LIBRE_API_ORIGINS', DEFAULT_CORS_ORIGINS))
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
