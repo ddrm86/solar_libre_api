@@ -26,6 +26,7 @@ class PanelBase(SQLModel):
     Base class to represent a solar panel.
 
     Attributes:
+        maker (str): Panel manufacturer
         model (str): Panel model
         nominal_power (int): Nominal power of the panel.
         vmpp (float): Voltage at maximum power point.
@@ -38,6 +39,7 @@ class PanelBase(SQLModel):
         description (str | None): Description of the panel.
         deleted (bool): Flag to mark the panel as deleted
     """
+    maker: str = Field(min_length=1)
     model: str = Field(index=True, unique=True, min_length=1)
     nominal_power: int
     vmpp: float
@@ -78,6 +80,7 @@ class PanelUpdate(PanelBase):
     Class to represent the data model of a solar panel to be updated.
 
     Attributes:
+        maker (str | None): Panel manufacturer
         model (str | None): Panel model
         nominal_power (int | None): Nominal power of the panel.
         vmpp (float | None): Voltage at maximum power point.
@@ -89,6 +92,7 @@ class PanelUpdate(PanelBase):
         reference (str | None): Optional reference of the panel
         description (str | None): Description of the panel.
     """
+    maker: str | None = None
     model: str | None = None
     nominal_power: int | None = None
     vmpp: float | None = None
