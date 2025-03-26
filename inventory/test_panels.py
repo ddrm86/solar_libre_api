@@ -31,6 +31,7 @@ def client_fixture(session: Session):
 
 def test_create_panel(client: TestClient):
     response = client.post('/panels/', json={
+        'maker': 'SP',
         'model': 'SP-100',
         'nominal_power': 100,
         'vmpp': 18.0,
@@ -49,6 +50,7 @@ def test_create_panel(client: TestClient):
 
 def test_create_panel_with_empty_model(client: TestClient):
     response = client.post('/panels/', json={
+        'maker': 'SP',
         'model': '',
         'nominal_power': 100,
         'vmpp': 18.0,
@@ -64,6 +66,7 @@ def test_create_panel_with_empty_model(client: TestClient):
 
 def test_read_panels(client: TestClient):
     client.post('/panels/', json={
+        'maker': 'SP',
         'model': 'SP-100',
         'nominal_power': 100,
         'vmpp': 18.0,
@@ -75,6 +78,7 @@ def test_read_panels(client: TestClient):
         'description': 'A 100W solar panel'
     })
     client.post('/panels/', json={
+        'maker': 'SP',
         'model': 'SP-200',
         'nominal_power': 200,
         'vmpp': 36.0,
@@ -97,6 +101,7 @@ def test_read_panels(client: TestClient):
 
 def test_read_panel(client: TestClient):
     response = client.post('/panels/', json={
+        'maker': 'SP',
         'model': 'SP-100',
         'nominal_power': 100,
         'vmpp': 18.0,
@@ -125,6 +130,7 @@ def test_read_nonexistent_panel(client: TestClient):
 
 def test_update_panel(client: TestClient):
     response = client.post('/panels/', json={
+        'maker': 'SP',
         'model': 'SP-100',
         'nominal_power': 100,
         'vmpp': 18.0,
@@ -147,6 +153,7 @@ def test_update_panel(client: TestClient):
 
 def test_delete_panel(client: TestClient):
     response = client.post('/panels/', json={
+        'maker': 'SP',
         'model': 'SP-100',
         'nominal_power': 100,
         'vmpp': 18.0,
@@ -165,9 +172,9 @@ def test_delete_panel(client: TestClient):
     assert data == {'id': panel_id, 'deleted': True}
 
     response = client.get(f'/panels/{panel_id}')
-    assert response.status_code == 404
+    assert response.status_code == 200
     data = response.json()
-    assert data['detail'] == PANEL_NOT_FOUND_MSG
+    assert data['deleted'] == True
 
 
 def test_update_nonexistent_panel(client: TestClient):

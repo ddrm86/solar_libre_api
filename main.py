@@ -12,8 +12,9 @@ import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
+from fastapi.exception_handlers import request_validation_exception_handler
 
-from inventory import panels
+from inventory import panels, monophase_inverters
 import db
 
 
@@ -32,6 +33,8 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(panels.router)
+app.include_router(monophase_inverters.router)
+
 
 DEFAULT_CORS_ORIGINS = '["http://localhost:8080", "http://localhost:5173"]'
 origins = json.loads(os.environ.get('SOLAR_LIBRE_API_ORIGINS', DEFAULT_CORS_ORIGINS))
@@ -53,6 +56,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         exc (RequestValidationError): The exception raised.
     """
     logging.warning('Validation error: %s - %s', request, exc)
+    return await request_validation_exception_handler(request, exc)
 
 
 @app.get("/")
