@@ -13,7 +13,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 
-from inventory import panels
+from inventory import panels, monophase_inverters
 import db
 
 
@@ -32,6 +32,8 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(panels.router)
+app.include_router(monophase_inverters.router)
+
 
 DEFAULT_CORS_ORIGINS = '["http://localhost:8080", "http://localhost:5173"]'
 origins = json.loads(os.environ.get('SOLAR_LIBRE_API_ORIGINS', DEFAULT_CORS_ORIGINS))
