@@ -12,6 +12,7 @@ import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
+from fastapi.exception_handlers import request_validation_exception_handler
 
 from inventory import panels, monophase_inverters
 import db
@@ -55,6 +56,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         exc (RequestValidationError): The exception raised.
     """
     logging.warning('Validation error: %s - %s', request, exc)
+    return await request_validation_exception_handler(request, exc)
 
 
 @app.get("/")
