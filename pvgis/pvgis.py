@@ -6,7 +6,7 @@ https://stackoverflow.com/questions/75372299/api-fetch-from-pvgis-with-javascrip
 """
 from typing import Annotated
 import requests
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, HTTPException
 from pydantic import BaseModel
 
 
@@ -50,7 +50,7 @@ def get_pvgis_data(req_params: Annotated[PVGISRequest, Query()]):
               'peakpower': req_params.peak_power, 'loss': req_params.loss,
               'angle': req_params.angle, 'aspect': req_params.azimuth, 'outputformat': 'json'}
     request = requests.get(base_url, params=params, timeout=3)
-    if request.status_code == 200:
-        return request.json()
-    else:
-        return {'error': 'Error al obtener datos de PVGIS', 'status_code': request.status_code}
+    if request.status_code != 200:
+        raise HTTPException(status_code=request.status_code, detail=request.json())
+
+    return request.json()
