@@ -15,6 +15,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.exception_handlers import request_validation_exception_handler
 
 from inventory import panels, monophase_inverters
+from pvgis import pvgis
 import db
 
 
@@ -34,6 +35,7 @@ async def lifespan(_: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app.include_router(panels.router)
 app.include_router(monophase_inverters.router)
+app.include_router(pvgis.router)
 
 
 DEFAULT_CORS_ORIGINS = '["http://localhost:8080", "http://localhost:5173"]'
