@@ -45,7 +45,7 @@ def get_pvgis_data(req_params: Annotated[PVGISRequest, Query()]):
     Returns:
         dict: JSON response from PVGIS API or an error message with status code.
     """
-    base_url = 'https://re.jrc.ec.europa.eu/api/v5_2/PVcalc'
+    base_url = 'https://re.jrc.ec.europa.eu/api/v5_3/PVcalc'
     params = {'lat': req_params.latitude, 'lon': req_params.longitude,
               'peakpower': req_params.peak_power, 'loss': req_params.loss,
               'angle': req_params.angle, 'aspect': req_params.azimuth, 'outputformat': 'json'}
