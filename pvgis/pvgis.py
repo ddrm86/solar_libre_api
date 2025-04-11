@@ -49,7 +49,7 @@ def get_pvgis_data(req_params: Annotated[PVGISRequest, Query()]):
     params = {'lat': req_params.latitude, 'lon': req_params.longitude,
               'peakpower': req_params.peak_power, 'loss': req_params.loss,
               'angle': req_params.angle, 'aspect': req_params.azimuth, 'outputformat': 'json'}
-    request = requests.get(base_url, params=params, timeout=3)
+    request = requests.get(base_url, params=params, timeout=30)
     if request.status_code != 200:
         raise HTTPException(status_code=request.status_code, detail=request.json())
 
