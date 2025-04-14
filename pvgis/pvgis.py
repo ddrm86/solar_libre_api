@@ -5,7 +5,7 @@ PVGIS API has to be accessed through the backend due to their CORS policy:
 https://stackoverflow.com/questions/75372299/api-fetch-from-pvgis-with-javascript-node-js/
 """
 from typing import Annotated
-import requests
+import os, requests
 from fastapi import APIRouter, Query, HTTPException
 from pydantic import BaseModel
 
@@ -49,7 +49,10 @@ def get_pvgis_data(req_params: Annotated[PVGISRequest, Query()]):
     params = {'lat': req_params.latitude, 'lon': req_params.longitude,
               'peakpower': req_params.peak_power, 'loss': req_params.loss,
               'angle': req_params.angle, 'aspect': req_params.azimuth, 'outputformat': 'json'}
-    request = requests.get(base_url, params=params, timeout=3)
+    proxy_dict = {
+        "http"  : os.environ.get('FIXIE_URL', ''),
+    }
+    request = requests.get(base_url, params=params, timeout=3, proxies=proxy_dict)
     if request.status_code != 200:
         raise HTTPException(status_code=request.status_code, detail=request.json())
 
