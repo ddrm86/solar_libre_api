@@ -51,6 +51,7 @@ def get_pvgis_data(req_params: Annotated[PVGISRequest, Query()]):
               'angle': req_params.angle, 'aspect': req_params.azimuth, 'outputformat': 'json'}
     proxy_dict = {
         "http"  : os.environ.get('FIXIE_URL', ''),
+        "https" : os.environ.get('FIXIE_URL', '')
     }
     request = requests.get(base_url, params=params, timeout=3, proxies=proxy_dict)
     if request.status_code != 200:
