@@ -38,7 +38,7 @@ class MonophaseInverterBase(SQLModel):
         min_mppt_operating_voltage (int): Minimum MPPT operating voltage.
         max_mppt_operating_voltage (int): Maximum MPPT operating voltage.
         max_input_current_per_mppt (float): Maximum input current per MPPT.
-        max_short_circuit_current (float): Maximum short circuit current.
+        max_short_circuit_current_per_mppt (float): Maximum short circuit current per MPPT.
         number_of_mppts (int): Number of MPPTs.
         max_inputs_per_mppt (int): Maximum inputs per MPPT.
         max_output_current (float): Maximum output current.
@@ -55,7 +55,7 @@ class MonophaseInverterBase(SQLModel):
     min_mppt_operating_voltage: int
     max_mppt_operating_voltage: int
     max_input_current_per_mppt: float
-    max_short_circuit_current: float
+    max_short_circuit_current_per_mppt: float
     number_of_mppts: int
     max_inputs_per_mppt: int
     max_output_current: float
@@ -104,7 +104,7 @@ class MonophaseInverterUpdate(MonophaseInverterBase):
         min_mppt_operating_voltage (int | None): Minimum MPPT operating voltage.
         max_mppt_operating_voltage (int | None): Maximum MPPT operating voltage.
         max_input_current_per_mppt (float | None): Maximum input current per MPPT.
-        max_short_circuit_current (float | None): Maximum short circuit current.
+        max_short_circuit_current_per_mppt (float | None): Maximum short circuit current per MPPT.
         number_of_mppts (int | None): Number of MPPTs.
         max_inputs_per_mppt (int | None): Maximum inputs per MPPT.
         max_output_current (float | None): Maximum output current.
@@ -120,7 +120,7 @@ class MonophaseInverterUpdate(MonophaseInverterBase):
     min_mppt_operating_voltage: int | None = None
     max_mppt_operating_voltage: int | None = None
     max_input_current_per_mppt: float | None = None
-    max_short_circuit_current: float | None = None
+    max_short_circuit_current_per_mppt: float | None = None
     number_of_mppts: int | None = None
     max_inputs_per_mppt: int | None = None
     max_output_current: float | None = None
