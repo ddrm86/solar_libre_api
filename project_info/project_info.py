@@ -143,6 +143,22 @@ def read_project_info(project_info_id: str, session: SessionDep):
         raise HTTPException(status_code=404, detail=PROJECT_INFO_NOT_FOUND_MSG)
     return project_info
 
+@router.get('/search/', response_model=dict)
+def search_project_info_by_name(name: str, session: SessionDep):
+    """
+    Search for project information by name (exact match).
+
+    Args:
+        name (str): The name of the project to search for.
+        session (SessionDep): Database session.
+
+    Returns:
+        dict: A dictionary indicating if the project was found and its data.
+    """
+    project_info = session.exec(select(ProjectInfo).where(ProjectInfo.name == name)).first()
+    if project_info:
+        return {"found": True, "project_info": project_info}
+    return {"found": False, "project_info": None}
 
 @router.patch('/{project_info_id}', response_model=ProjectInfoPublic)
 def update_project_info(project_info_id: str, project_info: ProjectInfoUpdate, session: SessionDep):

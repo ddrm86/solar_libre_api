@@ -148,3 +148,25 @@ def test_delete_nonexistent_project_info(client: TestClient):
     assert response.status_code == 404
     data = response.json()
     assert data['detail'] == PROJECT_INFO_NOT_FOUND_MSG
+
+def test_search_project_info_by_name_found(client: TestClient):
+    client.post('/project_info/', json={
+        'name': 'Project A',
+        'latitude': 40.7128,
+        'longitude': -74.0060,
+        'address': 'Central Yharnam'
+    })
+
+    response = client.get('/project_info/search/', params={'name': 'Project A'})
+    assert response.status_code == 200
+    data = response.json()
+    assert data['found'] is True
+    assert data['project_info']['name'] == 'Project A'
+    assert data['project_info']['address'] == 'Central Yharnam'
+
+def test_search_project_info_by_name_not_found(client: TestClient):
+    response = client.get('/project_info/search/', params={'name': 'Nonexistent Project'})
+    assert response.status_code == 200
+    data = response.json()
+    assert data['found'] is False
+    assert data['project_info'] is None
