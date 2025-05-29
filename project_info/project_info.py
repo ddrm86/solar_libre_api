@@ -30,12 +30,14 @@ class ProjectInfoBase(SQLModel):
         latitude (float): Latitude of the project location.
         longitude (float): Longitude of the project location.
         address (str | None): Optional address of the project.
+        map_zoom (int): Zoom level of the Leaflet map search interface.
         deleted (bool): Flag to mark the project as deleted.
     """
     name: str = Field(index=True, unique=True, min_length=1)
     latitude: float
     longitude: float
     address: str | None = None
+    map_zoom: int = Field(default=15)
     deleted: bool = Field(default=False)
 
 
