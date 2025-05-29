@@ -18,6 +18,7 @@ from inventory import panels, monophase_inverters
 from pvgis import pvgis
 from project_info import project_info
 from consumption import energy_consumption
+from installation import solar_arrays
 import db
 
 
@@ -40,6 +41,7 @@ app.include_router(monophase_inverters.router)
 app.include_router(pvgis.router)
 app.include_router(project_info.router)
 app.include_router(energy_consumption.router)
+app.include_router(solar_arrays.router)
 
 
 DEFAULT_CORS_ORIGINS = '["http://localhost:8080", "http://localhost:5173"]'
