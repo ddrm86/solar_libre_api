@@ -17,6 +17,7 @@ from fastapi.exception_handlers import request_validation_exception_handler
 from inventory import panels, monophase_inverters
 from pvgis import pvgis
 from project_info import project_info
+from consumption import energy_consumption
 import db
 
 
@@ -38,6 +39,7 @@ app.include_router(panels.router)
 app.include_router(monophase_inverters.router)
 app.include_router(pvgis.router)
 app.include_router(project_info.router)
+app.include_router(energy_consumption.router)
 
 
 DEFAULT_CORS_ORIGINS = '["http://localhost:8080", "http://localhost:5173"]'
