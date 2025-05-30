@@ -29,18 +29,18 @@ def client_fixture(session: Session):
 
 
 def test_create_energy_consumptions(client: TestClient):
-    response = client.post('/energy_consumption/', json={
-        'project_id': 'project_1',
-        'energy_consumptions': [
-            {'month': 1, 'peak': 100, 'flat': 200, 'valley': 300},
-            {'month': 2, 'peak': 150, 'flat': 250, 'valley': 350}
+    response = client.post(
+        '/energy_consumption/?project_id=project_1',
+        json=[
+            {'month': 0, 'peak': 100, 'flat': 200, 'valley': 300, 'project_id': 'project_1'},
+            {'month': 1, 'peak': 150, 'flat': 250, 'valley': 350, 'project_id': 'project_1'}
         ]
-    })
+    )
     assert response.status_code == 200
     data = response.json()
     assert len(data) == 2
-    assert data[0]['month'] == 1
-    assert data[1]['month'] == 2
+    assert data[0]['month'] == 0
+    assert data[1]['flat'] == 250
 
 
 def test_create_energy_consumptions_replace_existing(client: TestClient, session: Session):
@@ -52,12 +52,12 @@ def test_create_energy_consumptions_replace_existing(client: TestClient, session
     session.commit()
 
     # Replace entries
-    response = client.post('/energy_consumption/', json={
-        'project_id': 'project_1',
-        'energy_consumptions': [
-            {'month': 3, 'peak': 200, 'flat': 300, 'valley': 400}
+    response = client.post(
+        '/energy_consumption/?project_id=project_1',
+        json=[
+            {'month': 3, 'peak': 200, 'flat': 300, 'valley': 400, 'project_id': 'project_1'}
         ]
-    })
+    )
     assert response.status_code == 200
     data = response.json()
     assert len(data) == 1
