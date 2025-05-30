@@ -29,13 +29,13 @@ def client_fixture(session: Session):
 
 
 def test_create_solar_arrays(client: TestClient):
-    response = client.post('/solar_arrays/', json={
-        'project_id': 'project_1',
-        'solar_arrays': [
-            {'angle': 30, 'azimuth': 180, 'loss': 5, 'panel_number': 10, 'is_dirty': False},
-            {'angle': 45, 'azimuth': 90, 'loss': 10, 'panel_number': 20, 'is_dirty': True}
+    response = client.post(
+        '/solar_arrays/?project_id=project_1',
+        json=[
+            {'angle': 30, 'azimuth': 180, 'loss': 5, 'panel_number': 10, 'is_dirty': False, 'panel': None, 'project_id': 'project_1'},
+            {'angle': 45, 'azimuth': 90, 'loss': 10, 'panel_number': 20, 'is_dirty': True, 'panel': None, 'project_id': 'project_1'}
         ]
-    })
+    )
     assert response.status_code == 200
     data = response.json()
     assert len(data) == 2
@@ -52,12 +52,12 @@ def test_create_solar_arrays_replace_existing(client: TestClient, session: Sessi
     session.commit()
 
     # Replace entries
-    response = client.post('/solar_arrays/', json={
-        'project_id': 'project_1',
-        'solar_arrays': [
-            {'angle': 60, 'azimuth': 270, 'loss': 15, 'panel_number': 15, 'is_dirty': False}
+    response = client.post(
+        '/solar_arrays/?project_id=project_1',
+        json=[
+            {'angle': 60, 'azimuth': 270, 'loss': 15, 'panel_number': 15, 'is_dirty': False, 'panel': None, 'project_id': 'project_1'}
         ]
-    })
+    )
     assert response.status_code == 200
     data = response.json()
     assert len(data) == 1
