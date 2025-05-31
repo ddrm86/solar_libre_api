@@ -17,7 +17,7 @@ from fastapi.exception_handlers import request_validation_exception_handler
 from inventory import panels, monophase_inverters
 from pvgis import pvgis
 from project_info import project_info
-from consumption import energy_consumption
+from consumption import energy_consumption, costs
 from installation import solar_arrays, inverter_setups, mppt_setups, string_setups
 import db
 
@@ -41,6 +41,7 @@ app.include_router(monophase_inverters.router)
 app.include_router(pvgis.router)
 app.include_router(project_info.router)
 app.include_router(energy_consumption.router)
+app.include_router(costs.router)
 app.include_router(solar_arrays.router)
 app.include_router(inverter_setups.router)
 app.include_router(mppt_setups.router)
